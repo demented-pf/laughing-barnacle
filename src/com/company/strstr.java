@@ -7,51 +7,46 @@ public class strstr {
         return KMPSearch(needle, haystack);
     }
 
-
-
     int KMPSearch(String pat, String txt)
     {
         int M = pat.length();
         int N = txt.length();
+        if (M > N){
+            return -1;
+        }
+        if (M == 0){
+            return 0;
+        }
 
         int pos[] = new int[M];
         computeLPSArray(pat, M, pos);
-        System.out.println(Arrays.toString(pos));
         int i = 0;
         int j = 0;
-        int c = 0;
-        int thePos = 0;
         int counter = 0;
-        for (int m = 0; m < N; m++) {
+
+        while (i < N){
+            System.out.println(txt.charAt(i) + " " + i + " : " + pat.charAt(j) + " " + j);
             if (txt.charAt(i) == pat.charAt(j)){
-                i ++;
-                j ++;
-                counter++;
-                if (c == 0){
-                    thePos = i - (j - 1);
-                    c++;
-                }
+                i += 1;
+                j += 1;
             }
-            else {
-                c = 0;
-                while (txt.charAt(i) != pat.charAt(j) && i < pat.length()){
-                    if (txt.charAt(i) == pat.charAt(j)){
-                        break;
-                    }
-                    if (txt.charAt(i) != pat.charAt(j) && j != 0){
-                        j = pos[j - 1];
-                    }
-                    else {
-                        i ++;
-                    }
-                }
+
+            if (j == M){
+                System.out.println(i - j);
+                return i - j;
             }
-            if (counter == M){
-                return thePos - 1;
+
+            else if (pat.charAt(j) != txt.charAt(i) && i < N) {
+                if (j == 0 && i + 1 < N){
+                    i += 1;
+                }
+                else {
+                    j = pos[j - 1];
+                }
             }
         }
+        System.out.println(-1);
         return -1;
-
     }
 
     void computeLPSArray(String pat, int lengthOfPattern, int pos[])
@@ -85,8 +80,8 @@ public class strstr {
     }
     public static void main(String args[])
     {
-        String txt = "aaaaa";
-        String pat = "bba";
-        new kmpGeeksForGeeks().KMPSearch(pat, txt);
+        String txt = "mississippi";
+        String pat = "issipi";
+        new strstr().KMPSearch(pat, txt);
     }
 }

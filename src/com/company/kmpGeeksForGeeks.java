@@ -5,52 +5,41 @@ import java.util.Arrays;
 
 class kmpGeeksForGeeks {
     void KMPSearch(String pat, String txt) {
-        int M = pat.length();
-        int N = txt.length();
-        int pos[] = new int[M];
-        computeLPSArray(pat, M, pos);
-        System.out.println(Arrays.toString(pos));
-        int i = 0; int j = 0; int c = 0;
-        int thePos = 0;
-        int counter = 0;
-        boolean e = false;
-        for (int m = 0; m < N; m++) {
-            if (txt.charAt(i) == pat.charAt(j)){
-                i ++;
-                j ++;
-                counter++;
-                if (c == 0){
-                    thePos = i - (j - 1);
-                    c++;
-                }
+        int needleLength = pat.length();
+        int haystackLength = txt.length();
+
+        // create posArr[] that will hold the longest
+        // prefix suffix values for pattern
+        int posArr[] = new int[needleLength];
+        int j = 0; // index for pat[]
+
+        // Preprocess the pattern (calculate posArr[]
+        // array)
+        computeLPSArray(pat, needleLength, posArr);
+
+        int i = 0; // index for txt[]
+        while (i < haystackLength) {
+            if (pat.charAt(j) == txt.charAt(i)) {
+                j++;
+                i++;
             }
-            else {
-                c = 0;
-                while (txt.charAt(i) != pat.charAt(j) && i < txt.length()){
-                    if (txt.charAt(i) == pat.charAt(j)){
-                        break;
-                    }
-                    if (txt.charAt(i) != pat.charAt(j) && j != 0){
-                        j = pos[j - 1];
-                    }
-                    else {
-                        i ++;
-                    }
-                }
-            }
-            if (counter == M){
-                System.out.println(thePos);
-                e = true;
-                return;
+            if (j == needleLength) {
+                System.out.println("Found pattern "
+                        + "at index " + (i - j));
+                j = posArr[j - 1]; // this is for getting how many of the end letter exist such as in a pattern "aba"
+                // posArr[j - 1] would be 1. "abc" posArr[j - 1] -> 0
             }
 
+            // mismatch after j matches
+            else if (i < haystackLength && pat.charAt(j) != txt.charAt(i)) {
+                // Do not match posArr[0..posArr[j-1]] characters,
+                // they will match anyway
+                if (j != 0)
+                    j = posArr[j - 1];
+                else
+                    i = i + 1;
+            }
         }
-        if (!e){
-            System.out.println(-1);
-            return;
-        }
-
-
     }
 
     void computeLPSArray(String pat, int lengthOfPattern, int pos[])
@@ -82,8 +71,8 @@ class kmpGeeksForGeeks {
 
     public static void main(String args[])
     {
-        String txt = "aaaaa";
-        String pat = "bba";
+        String txt = "abcdabc";
+        String pat = "bcd";
         new kmpGeeksForGeeks().KMPSearch(pat, txt);
     }
 }
