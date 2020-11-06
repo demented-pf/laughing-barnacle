@@ -38,7 +38,7 @@ gradle-app.setting
 ## IntelliJ
 ##############################
 out/
-.idea/
+.idea/*
 .idea_modules/
 *.iml
 *.ipr
@@ -48,7 +48,6 @@ out/
 ## Eclipse
 ##############################
 .settings/
-bin/
 tmp/
 .metadata
 .classpath
